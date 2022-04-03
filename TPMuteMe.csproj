@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>TouchPortalMuteMePlugin</AssemblyName>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <PackageIcon>icon-web.png</PackageIcon>
+    <IsPackable>false</IsPackable>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Title>TouchPortal MuteMe plugin</Title>
+    <Authors>Denis Sowa</Authors>
+    <Description>TouchPortal MuteMe plugin</Description>
+    <Copyright>2022 by Denis Sowa</Copyright>
+    <PackageProjectUrl>https://github.com/L-C-P</PackageProjectUrl>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HidSharp" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="TouchPortalSDK" Version="0.30.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="entry.tp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="icon-web.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="icon24.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="cp -R &quot;$(TargetDir)&quot; &quot;$(ProjectDir)bin/TouchPortalMuteMePlugin&quot;&#xA;cd &quot;$(ProjectDir)bin/&quot;&#xA;zip -r &quot;TouchPortalMuteMePlugin.tpp&quot; &quot;TouchPortalMuteMePlugin&quot; -x &quot;*.DS_Store&quot;&#xA;rm -R &quot;TouchPortalMuteMePlugin&quot;" />
+  </Target>
+
+</Project>

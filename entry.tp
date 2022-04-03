@@ -1,0 +1,203 @@
+{
+    "$schema": "https://pjiesco.com/touch-portal/entry.tp/schema",
+    "sdk": 5,
+    "version": 1,
+    "name": "MuteMe Plugin",
+    "id": "info.sowa.muteme",
+    "configuration": {
+        "colorDark": "#7c1e17",
+        "colorLight": "#cf1d00"
+    },
+    "plugin_start_cmd": "dotnet ./TouchPortalMuteMePlugin.dll",
+    "plugin_start_cmd_mac": "/usr/local/share/dotnet/dotnet ./TouchPortalMuteMePlugin.dll",
+    "categories": [
+        {
+            "id": "info.sowa.muteme.category",
+            "name": "MuteMe",
+            "imagepath": "%TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin/Assets/icon24.png",
+            "actions": [
+                {
+                    "id": "info.sowa.muteme.action.set",
+                    "name": "Set MuteMe color and mode",
+                    "prefix": "MuteMe",
+                    "type": "communicate",
+                    "tryInline": true,
+                    "format": "Set MuteMe to {$info.sowa.muteme.action.set.color$} and {$info.sowa.muteme.action.set.mode$}",
+                    "hasHoldFunctionality": false,
+                    "data": [
+                        {
+                            "id": "info.sowa.muteme.action.set.color",
+                            "type": "choice",
+                            "label": "Color",
+                            "default": "Red",
+                            "valueChoices": [
+                                "NoColor",
+                                "Red",
+                                "Green",
+                                "Yellow",
+                                "Blue",
+                                "Purple",
+                                "Cyan",
+                                "White",
+                                "Orange"
+                            ]
+                        },
+                        {
+                            "id": "info.sowa.muteme.action.set.mode",
+                            "type": "choice",
+                            "label": "Mode",
+                            "default": "Full Bright",
+                            "valueChoices": [
+                                "Full Bright",
+                                "Dim",
+                                "Fast Pulse",
+                                "Slow Pulse"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "info.sowa.muteme.action.signal",
+                    "name": "Signal MuteMe",
+                    "prefix": "MuteMe",
+                    "type": "communicate",
+                    "tryInline": true,
+                    "format": "Signal MuteMe with {$info.sowa.muteme.action.set.color$} - {$info.sowa.muteme.action.set.color2$} and {$info.sowa.muteme.action.set.signalmode$}",
+                    "hasHoldFunctionality": false,
+                    "data": [
+                        {
+                            "id": "info.sowa.muteme.action.set.color",
+                            "type": "choice",
+                            "label": "Color",
+                            "default": "Red",
+                            "valueChoices": [
+                                "CurrentColor",
+                                "NoColor",
+                                "Red",
+                                "Green",
+                                "Yellow",
+                                "Blue",
+                                "Purple",
+                                "Cyan",
+                                "White",
+                                "Orange"
+                            ]
+                        },
+                        {
+                            "id": "info.sowa.muteme.action.set.color2",
+                            "type": "choice",
+                            "label": "Color",
+                            "default": "NoColor",
+                            "valueChoices": [
+                                "CurrentColor",
+                                "NoColor",
+                                "Red",
+                                "Green",
+                                "Yellow",
+                                "Blue",
+                                "Purple",
+                                "Cyan",
+                                "White",
+                                "Orange"
+                            ]
+                        },
+                        {
+                            "id": "info.sowa.muteme.action.set.signalmode",
+                            "type": "choice",
+                            "label": "Signal mode",
+                            "default": "Fast",
+                            "valueChoices": [
+                                "Fast",
+                                "Slow",
+                                "Once"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "info.sowa.muteme.action.notification",
+                    "name": "Set MuteMe notification",
+                    "prefix": "MuteMe",
+                    "type": "communicate",
+                    "tryInline": true,
+                    "format": "Set MuteMe notification to flash {$info.sowa.muteme.action.set.notificationmode$} in {$info.sowa.muteme.action.set.color$} every {$info.sowa.muteme.action.set.notificationdelay$} second(s)",
+                    "hasHoldFunctionality": false,
+                    "data": [
+                        {
+                            "id": "info.sowa.muteme.action.set.color",
+                            "type": "choice",
+                            "label": "Color",
+                            "default": "Red",
+                            "valueChoices": [
+                                "Red",
+                                "Green",
+                                "Yellow",
+                                "Blue",
+                                "Purple",
+                                "Cyan",
+                                "White",
+                                "Orange"
+                            ]
+                        },
+                        {
+                            "id": "info.sowa.muteme.action.set.notificationmode",
+                            "type": "choice",
+                            "label": "Mode",
+                            "default": "Once",
+                            "valueChoices": [
+                                "Off",
+                                "Once",
+                                "Twice"
+                            ]
+                        },
+                        {
+                            "id": "info.sowa.muteme.action.set.notificationdelay",
+                            "type": "choice",
+                            "label": "Delay",
+                            "default": "10",
+                            "valueChoices": [
+                                "1",
+                                "2",
+                                "5",
+                                "8",
+                                "10",
+                                "15",
+                                "20",
+                                "25",
+                                "30"
+                            ]
+                        }
+                    ]
+                },
+            ],
+            "states": [
+                {
+                    "id": "MuteMe_State",
+                    "type": "choice",
+                    "desc": "MuteMe state",
+                    "default": "Untouched",
+                    "valueChoices": [
+                        "Touched",
+                        "Untouched"
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "id": "info.sowa.muteme.event.touch",
+                    "name": "When MuteMe state changes",
+                    "format": "When MuteMe state changes to $val",
+                    "type": "communicate",
+                    "valueType": "choice",
+                    "valueChoices": [
+                        "Touched",
+                        "Untouched"
+                    ],
+                    "valueStateId": "MuteMe_State"
+                }
+            ],
+            "connectors": []
+        }
+    ],
+    "settings": []
+}
