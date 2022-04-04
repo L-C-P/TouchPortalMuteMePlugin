@@ -9,10 +9,21 @@ using TPMuteMe.Model;
 
 namespace TPMuteMe;
 
+/// <summary>
+/// MuteMe handling.
+/// </summary>
 public class MuteMe
 {
+    /// <summary>
+    /// MuteMe vendor id.
+    /// </summary>
     private const Int32 CVendorId = 8352;
+
+    /// <summary>
+    /// MuteMe product id.
+    /// </summary>
     private const Int32 CProductId = 17114;
+
     private readonly Object _Lock = new Object();
     private readonly ILogger _Logger;
     private readonly ConcurrentQueue<MuteMeQueueEntry> _QueueEntry = new ConcurrentQueue<MuteMeQueueEntry>();
@@ -31,14 +42,25 @@ public class MuteMe
     private Thread? _Thread;
     private Boolean _Touched;
 
+    /// <summary>
+    /// The constructor.
+    /// </summary>
+    /// <param name="logger">Logger instance.</param>
     public MuteMe(ILogger<MuteMe> logger)
     {
         _Logger = logger;
         Connected = false;
     }
 
+    /// <summary>
+    /// Is MuteMe connected and reachable.
+    /// </summary>
     public Boolean Connected { get; private set; }
 
+    /// <summary>
+    /// Is the MuteMe hardware connected to usb.
+    /// </summary>
+    /// <returns>USB connected.</returns>
     public static Boolean HardwareConnected()
     {
         DeviceList? usbList = DeviceList.Local;
@@ -46,8 +68,14 @@ public class MuteMe
         return usbList?.GetHidDeviceOrNull(CVendorId, CProductId) != null;
     }
 
+    /// <summary>
+    /// Connect to MuteMe and start background loop.
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
     public void Connect(ITouchPortalClient client, CancellationToken cancellationToken)
     {
+// TODOLater: Remove Client ! Pass callback.
         _Client = client ?? throw new ArgumentNullException(nameof(client));
         _CancellationToken = cancellationToken;
 
@@ -57,6 +85,11 @@ public class MuteMe
         _Thread.Start();
     }
 
+    /// <summary>
+    /// The background thread loop. Will check, if MuteMe is connected. Reconnect, if necessary.
+    /// Handle also the queued color and mode changes.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
     private void Do(CancellationToken cancellationToken)
     {
         try
@@ -87,6 +120,11 @@ public class MuteMe
         }
     }
 
+    /// <summary>
+    /// Handle the queue entries (Next color and mode change).
+    /// In addition the active notification will checked.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
     private void DoQueue(CancellationToken cancellationToken)
     {
         if (_QueueEntry.TryDequeue(out MuteMeQueueEntry? result))
@@ -109,41 +147,55 @@ public class MuteMe
         DoNotification();
     }
 
+    /// <summary>
+    /// Handle the active notification.
+    /// </summary>
     private void DoNotification()
     {
+        // No notification active.
         if (_NotificationMode == MuteMeNotificationMode.Off)
         {
             return;
         }
 
-        if (DateTime.Now > _NotificationNextTrigger)
+        // Nothing to do now.
+        if (DateTime.Now <= _NotificationNextTrigger)
         {
-            if (_NotificationColor == _LastColor)
-            {
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
-            }
-
-            switch (_NotificationMode)
-            {
-                case MuteMeNotificationMode.Once:
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
-                    break;
-                case MuteMeNotificationMode.Twice:
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
-                    break;
-            }
-
-            if (_NotificationColor == _LastColor)
-            {
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
-            }
-
-            _NotificationNextTrigger = DateTime.Now.AddSeconds(_NotificationDelay);
+            return;
         }
+
+        // Should use the last used color? Then switch MuteMe off, before starting the notification sequence.
+        if (_NotificationColor == _LastColor)
+        {
+            _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+        }
+
+        switch (_NotificationMode)
+        {
+            case MuteMeNotificationMode.Once:
+                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                break;
+            case MuteMeNotificationMode.Twice:
+                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                break;
+        }
+
+        // if (_NotificationColor == _LastColor)
+        {
+            _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+        }
+
+        // Set the next notification time.
+        _NotificationNextTrigger = DateTime.Now.AddSeconds(_NotificationDelay);
     }
 
+    /// <summary>
+    /// Connect or reconnect to MuteMe.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
+    /// <returns>If MuteMe is connected to USB and reachable.</returns>
     private Boolean ConnectMuteMe(CancellationToken cancellationToken)
     {
         DeviceList? usbList = DeviceList.Local;
@@ -185,6 +237,9 @@ public class MuteMe
         return true;
     }
 
+    /// <summary>
+    /// After connected to MuteMe, send RBG sequence.
+    /// </summary>
     private void SignalConnected()
     {
         _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.Red, Mode = MuteMeMode.FullBright, Delay = 250});
@@ -192,7 +247,11 @@ public class MuteMe
         _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.Blue, Mode = MuteMeMode.FullBright, Delay = 250});
     }
 
-    private void BytesReady(IAsyncResult ar)
+    /// <summary>
+    /// Received touched/untouched event from MuteMe.
+    /// </summary>
+    /// <param name="result">Date received from MuteMe.</param>
+    private void BytesReady(IAsyncResult result)
     {
         lock (_Lock)
         {
@@ -227,6 +286,11 @@ public class MuteMe
         }
     }
 
+    /// <summary>
+    /// Set the color and mode.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="mode">The mode.</param>
     public void SetColorAndMode(MuteMeColor color, MuteMeMode mode)
     {
         _LastColor = color;
@@ -234,6 +298,12 @@ public class MuteMe
         _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color, Mode = mode});
     }
 
+    /// <summary>
+    /// Signal MuteMe. Change color to color2.
+    /// </summary>
+    /// <param name="color">First color to signal.</param>
+    /// <param name="color2">Second color to signal.</param>
+    /// <param name="signalMode">Signal mode.</param>
     public void Signal(MuteMeColor color, MuteMeColor color2, MuteMeSignalMode signalMode)
     {
         if (color == MuteMeColor.CurrentColor)
@@ -271,6 +341,12 @@ public class MuteMe
         }
     }
 
+    /// <summary>
+    /// Activate or deactivate notification mode.
+    /// </summary>
+    /// <param name="color">The color for the notification.</param>
+    /// <param name="notificationMode">The mode for the notification. Use Off to deactivate the notification.</param>
+    /// <param name="delay">Delay in seconds between the notification.</param>
     public void Notification(MuteMeColor color, MuteMeNotificationMode notificationMode, UInt32 delay)
     {
         _NotificationMode = notificationMode;
@@ -279,6 +355,11 @@ public class MuteMe
         _NotificationNextTrigger = DateTime.Now.AddSeconds(1);
     }
 
+    /// <summary>
+    /// Send color and mode to MuteMe.
+    /// </summary>
+    /// <param name="color">The color to set.</param>
+    /// <param name="mode">The mode to set.</param>
     private void SetMuteMe(MuteMeColor color, MuteMeMode mode)
     {
         if (!Connected)

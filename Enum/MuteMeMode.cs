@@ -1,5 +1,8 @@
 namespace TPMuteMe.Enum;
 
+/// <summary>
+/// Possible modes for MuteMe
+/// </summary>
 public enum MuteMeMode
 {
     FullBright = 0, // full bright

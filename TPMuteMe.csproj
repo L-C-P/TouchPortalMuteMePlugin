@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cp -R &quot;$(TargetDir)&quot; &quot;$(ProjectDir)bin/TouchPortalMuteMePlugin&quot;&#xA;cd &quot;$(ProjectDir)bin/&quot;&#xA;zip -r &quot;TouchPortalMuteMePlugin.tpp&quot; &quot;TouchPortalMuteMePlugin&quot; -x &quot;*.DS_Store&quot;&#xA;rm -R &quot;TouchPortalMuteMePlugin&quot;" />
+    <Exec Command="cp -R &quot;$(TargetDir)&quot; &quot;$(ProjectDir)bin/TouchPortalMuteMePlugin&quot;&#xA;cd &quot;$(ProjectDir)bin/&quot;&#xA;zip -r &quot;Touch_Portal_MuteMe_Plugin.tpp&quot; &quot;TouchPortalMuteMePlugin&quot; -x &quot;*.DS_Store&quot;&#xA;rm -R &quot;TouchPortalMuteMePlugin&quot;" />
   </Target>
 
 </Project>

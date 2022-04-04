@@ -1,5 +1,8 @@
 ﻿namespace TPMuteMe.Enum;
 
+/// <summary>
+/// Possible colors for MuteMe
+/// </summary>
 public enum MuteMeColor
 {
     NoColor = 0, // noColor
