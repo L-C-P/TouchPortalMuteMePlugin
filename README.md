@@ -1,14 +1,26 @@
 <p align="center">
-  <img src="Assets/icon-web.png" width="128" height="128" alt="logo" />
+  <img src="icon-web.png" width="128" height="128" alt="logo" />
 </p>
 
 # Touch Portal MuteMe Plugin
 
 Integrate [MuteMe](https://muteme.com) into [Touch Portal](https://www.touch-portal.com)
 
-https://aka.ms/dotnet-download
+You need .NET 6 installed. Download it here: https://aka.ms/dotnet-download
 
-Will follow...
+On Mac dotnet must be installed in /usr/local/share/dotnet/dotnet
+
+The plugin will add three actions: 
+- Set MuteMe color and mode (static till next change)
+- Signal MuteMe (one time flash)
+- Set MuteMe notification (repeated flash)
+
+and one Event:
+- When MuteMe state changes (touched / untouched)
+
+in addition a MuteMe state value is added.
+
+_The manual will follow..._
 
 ## Credits
 

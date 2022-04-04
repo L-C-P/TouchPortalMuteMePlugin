@@ -14,7 +14,7 @@
         {
             "id": "info.sowa.muteme.category",
             "name": "MuteMe",
-            "imagepath": "%TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin/Assets/icon24.png",
+            "imagepath": "%TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin/icon24.png",
             "actions": [
                 {
                     "id": "info.sowa.muteme.action.set",
