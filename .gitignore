@@ -397,3 +397,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/.idea/.idea.TPMuteMe/.idea/misc.xml
+/Thumbs.db
+/Touch_Portal_MuteMe_Plugin.tpp
