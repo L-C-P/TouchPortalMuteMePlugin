@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 .DS_Store
+/Touch_Portal_MuteMe_Plugin.tpp
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -399,4 +400,3 @@ FodyWeavers.xsd
 *.sln.iml
 /.idea/.idea.TPMuteMe/.idea/misc.xml
 /Thumbs.db
-/Touch_Portal_MuteMe_Plugin.tpp

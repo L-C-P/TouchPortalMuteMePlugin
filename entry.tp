@@ -1,6 +1,6 @@
 {
     "sdk": 5,
-    "version": 10300,
+    "version": 10003,
     "name": "MuteMe Plugin",
     "id": "info.sowa.muteme",
     "configuration": {

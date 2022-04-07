@@ -5,6 +5,7 @@
 # Touch Portal MuteMe Plugin
 
 Integrates [MuteMe](https://muteme.com) into [Touch Portal](https://www.touch-portal.com)
+You can control the color and mode. Send a notification to MuteMe and also setup a recurring color notification pattern.
 
 The plugin will add three actions:
 
