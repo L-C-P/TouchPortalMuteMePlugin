@@ -35,10 +35,6 @@
     <None Update="entry.tp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="icon-web.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
     <None Update="icon24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -50,10 +46,19 @@
     <None Update="plugin_start.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\icon-web.png">
+      <Pack>True</Pack>
+      <PackagePath>/</PackagePath>
+    </None>
+    <None Remove="Release\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Release" />
+    <Compile Remove="Release\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Release\**" />
   </ItemGroup>
 
 </Project>
