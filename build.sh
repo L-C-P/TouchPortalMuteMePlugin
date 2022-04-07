@@ -6,7 +6,7 @@ dotnet publish -c Release -r linux-x64 -p:PublishReadyToRun=true --self-containe
 
 cd "bin/"
 
-#mkdir -p "TouchPortalMuteMePlugin"
+mkdir -p "TouchPortalMuteMePlugin"
 mkdir -p "TouchPortalMuteMePlugin/osx"
 mkdir -p "TouchPortalMuteMePlugin/win"
 mkdir -p "TouchPortalMuteMePlugin/linux"
