@@ -1,7 +1,6 @@
 {
-    "$schema": "https://pjiesco.com/touch-portal/entry.tp/schema",
     "sdk": 5,
-    "version": 1,
+    "version": 10200,
     "name": "MuteMe Plugin",
     "id": "info.sowa.muteme",
     "configuration": {
@@ -9,7 +8,9 @@
         "colorLight": "#cf1d00"
     },
     "plugin_start_cmd": "dotnet ./TouchPortalMuteMePlugin.dll",
-    "plugin_start_cmd_mac": "/usr/local/share/dotnet/dotnet ./TouchPortalMuteMePlugin.dll",
+    "plugin_start_cmd_windows": "%TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin\\TouchPortalMuteMePlugin.exe",
+    "plugin_start_cmd_mac": "sh %TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin/plugin_start.sh",
+    "plugin_start_cmd_linux": "sh %TP_PLUGIN_FOLDER%TouchPortalMuteMePlugin/plugin_start.sh",
     "categories": [
         {
             "id": "info.sowa.muteme.category",

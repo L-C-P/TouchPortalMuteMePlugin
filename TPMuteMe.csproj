@@ -33,7 +33,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="entry.tp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="icon-web.png">
       <Pack>True</Pack>
@@ -46,10 +46,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Remove="Thumbs.db" />
+    <None Update="plugin_start.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cp -R &quot;$(TargetDir)&quot; &quot;$(ProjectDir)bin/TouchPortalMuteMePlugin&quot;&#xA;cd &quot;$(ProjectDir)bin/&quot;&#xA;zip -r &quot;Touch_Portal_MuteMe_Plugin.tpp&quot; &quot;TouchPortalMuteMePlugin&quot; -x &quot;*.DS_Store&quot;&#xA;rm -R &quot;TouchPortalMuteMePlugin&quot;" />
-  </Target>
 
 </Project>

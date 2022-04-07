@@ -5,7 +5,7 @@ namespace TPMuteMe.Model;
 /// <summary>
 /// Model for queueing MuteMe changes
 /// </summary>
-public class MuteMeQueueEntry
+public class MuteMeNotificationQueueEntry
 {
     /// <summary>
     /// The next color

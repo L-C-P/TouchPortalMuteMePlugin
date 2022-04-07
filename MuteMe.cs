@@ -26,7 +26,7 @@ public class MuteMe
 
     private readonly Object _Lock = new Object();
     private readonly ILogger _Logger;
-    private readonly ConcurrentQueue<MuteMeQueueEntry> _QueueEntry = new ConcurrentQueue<MuteMeQueueEntry>();
+    private readonly ConcurrentQueue<MuteMeNotificationQueueEntry> _QueueEntry = new ConcurrentQueue<MuteMeNotificationQueueEntry>();
     private readonly Byte[] _ReadBuffer = new Byte[8];
     private CancellationToken _CancellationToken;
     private ITouchPortalClient? _Client;
@@ -75,7 +75,7 @@ public class MuteMe
     /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
     public void Connect(ITouchPortalClient client, CancellationToken cancellationToken)
     {
-// TODOLater: Remove Client ! Pass callback.
+// TODOx: Remove Client ! Pass callback.
         _Client = client ?? throw new ArgumentNullException(nameof(client));
         _CancellationToken = cancellationToken;
 
@@ -127,7 +127,7 @@ public class MuteMe
     /// <param name="cancellationToken">Cancellation token to stop the operation.</param>
     private void DoQueue(CancellationToken cancellationToken)
     {
-        if (_QueueEntry.TryDequeue(out MuteMeQueueEntry? result))
+        if (_QueueEntry.TryDequeue(out MuteMeNotificationQueueEntry? result))
         {
             _SequenceStarted = true;
             SetMuteMe(result.Color, result.Mode);
@@ -167,24 +167,24 @@ public class MuteMe
         // Should use the last used color? Then switch MuteMe off, before starting the notification sequence.
         if (_NotificationColor == _LastColor)
         {
-            _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+            _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
         }
 
         switch (_NotificationMode)
         {
             case MuteMeNotificationMode.Once:
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
                 break;
             case MuteMeNotificationMode.Twice:
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = _NotificationColor, Mode = MuteMeMode.FullBright, Delay = 100});
                 break;
         }
 
         // if (_NotificationColor == _LastColor)
         {
-            _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
+            _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.NoColor, Mode = MuteMeMode.Dim, Delay = 100});
         }
 
         // Set the next notification time.
@@ -242,9 +242,9 @@ public class MuteMe
     /// </summary>
     private void SignalConnected()
     {
-        _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.Red, Mode = MuteMeMode.FullBright, Delay = 250});
-        _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.Green, Mode = MuteMeMode.FullBright, Delay = 250});
-        _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = MuteMeColor.Blue, Mode = MuteMeMode.FullBright, Delay = 250});
+        _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.Red, Mode = MuteMeMode.FullBright, Delay = 250});
+        _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.Green, Mode = MuteMeMode.FullBright, Delay = 250});
+        _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = MuteMeColor.Blue, Mode = MuteMeMode.FullBright, Delay = 250});
     }
 
     /// <summary>
@@ -295,7 +295,7 @@ public class MuteMe
     {
         _LastColor = color;
         _LastMode = mode;
-        _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color, Mode = mode});
+        _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color, Mode = mode});
     }
 
     /// <summary>
@@ -321,22 +321,22 @@ public class MuteMe
             case MuteMeSignalMode.Fast:
                 for (Int32 i = 0; i < 8; i++)
                 {
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 100});
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 100});
+                    _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 100});
+                    _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 100});
                 }
 
                 break;
             case MuteMeSignalMode.Slow:
                 for (Int32 i = 0; i < 4; i++)
                 {
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 250});
-                    _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 250});
+                    _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 250});
+                    _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 250});
                 }
 
                 break;
             case MuteMeSignalMode.Once:
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 800});
-                _QueueEntry.Enqueue(new MuteMeQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 800});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color, Mode = MuteMeMode.FullBright, Delay = 800});
+                _QueueEntry.Enqueue(new MuteMeNotificationQueueEntry {Color = color2, Mode = MuteMeMode.FullBright, Delay = 800});
                 break;
         }
     }

@@ -4,29 +4,25 @@
 
 # Touch Portal MuteMe Plugin
 
-Integrate [MuteMe](https://muteme.com) into [Touch Portal](https://www.touch-portal.com)
+Integrates [MuteMe](https://muteme.com) into [Touch Portal](https://www.touch-portal.com)
 
-You need .NET 6 installed. Download it here: https://aka.ms/dotnet-download
+The plugin will add three actions:
 
-On Mac dotnet must be installed in /usr/local/share/dotnet/dotnet
-
-The plugin will add three actions: 
 - Set MuteMe color and mode (static till next change)
 - Signal MuteMe (one time flash)
 - Set MuteMe notification (repeated flash)
 
 and one Event:
+
 - When MuteMe state changes (touched / untouched)
 
-in addition a MuteMe state value is added.
-
-_The manual will follow..._
+in addition a _MuteMe state_ value is added.
 
 ## Credits
 
-Developed by [Denis Sowa](https://github.com/L-C-P) with :heart:.
+Developed by [Denis Sowa](https://github.com/L-C-P) with :heart:
 
-[Touch Portal .Net SDK](https://github.com/oddbear/TouchPortalSDK) is developed by [Oddbjørn Bakke](https://github.com/oddbear).
+[Touch Portal .Net SDK](https://github.com/oddbear/TouchPortalSDK) is developed by [Oddbjørn Bakke](https://github.com/oddbear)
 
 [MuteMe](https://github.com/red-fox-star/muteme-diy) protocol example by [Red Fox Star](https://github.com/red-fox-star)
 
